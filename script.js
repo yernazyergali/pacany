@@ -59,9 +59,20 @@ function observe() {
   } else { rv.forEach(function (el) { el.classList.add("in"); }); }
 }
 
-/* ---------- кнопка «Да» -> личка в Telegram ---------- */
-var yes = $("yes");
-yes.href = "https://t.me/" + encodeURIComponent(TELEGRAM_USERNAME) + "?text=" + encodeURIComponent(REPLY_TEXT);
+/* ---------- выбор бро и кнопка «Да» -> личка в Telegram ---------- */
+var yes = $("yes"), bros = $("bros");
+function setBro(name) {
+  TELEGRAM_USERNAME = name;
+  yes.href = "https://t.me/" + encodeURIComponent(name) + "?text=" + encodeURIComponent(REPLY_TEXT);
+}
+bros.addEventListener("click", function (e) {
+  var b = e.target.closest(".chip"); if (!b) return;
+  bros.querySelectorAll(".chip").forEach(function (c) { c.setAttribute("aria-pressed", "false"); });
+  b.setAttribute("aria-pressed", "true");
+  setBro(b.dataset.v);
+  var r = b.getBoundingClientRect(); burst(r.left + r.width / 2, r.top + r.height / 2, 10);
+});
+setBro(TELEGRAM_USERNAME);
 yes.addEventListener("click", function () {
   var r = yes.getBoundingClientRect(); burst(r.left + r.width / 2, r.top + r.height / 2, 40);
 });
